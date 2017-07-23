@@ -34,6 +34,16 @@ namespace Decrypter
             }
         }
 
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbOutput.Text))
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(tbOutput.Text);
+                MessageBox.Show("Links copied to clipboard", "Clipboard", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void btnDecrypt_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(tbInput.Text) && File.Exists(tbInput.Text))

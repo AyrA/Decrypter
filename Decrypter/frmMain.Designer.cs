@@ -126,6 +126,7 @@
             this.btnCopy.TabIndex = 6;
             this.btnCopy.Text = "&Copy";
             this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
             // frmMain
             // 
