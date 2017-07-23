@@ -67,10 +67,17 @@ namespace Decrypter
                     return;
                 }
                 var Result = ManualUpload.Upload(Data);
-                if (Result.success.links != null && Result.success.links.Length > 0)
+                if (Result.success.links != null)
                 {
-                    tbLinks.Lines = (string[])Result.success.links.Clone();
-                    SaveList();
+                    if (Result.success.links.Length > 0)
+                    {
+                        tbLinks.Lines = (string[])Result.success.links.Clone();
+                        SaveList();
+                    }
+                    else
+                    {
+                        MessageBox.Show("The file contains no links", "Empty link list", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
                 else
                 {

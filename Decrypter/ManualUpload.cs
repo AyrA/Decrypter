@@ -9,6 +9,8 @@ namespace Decrypter
 {
     public static class ManualUpload
     {
+        public static string LastResult = "";
+
         private const string HEADER = @"POST /decrypt/upload HTTP/1.1
 Host: dcrypt.it
 Content-Length: {0}
@@ -22,10 +24,10 @@ Referer: http://dcrypt.it/
 Accept-Language: en-US,en;q=0.8,de;q=0.6";
 
         private const string BODY = "------SomeRandomBoundary\r\n" +
-            "Content-Disposition: form-data; name=\"dlcfile\"; filename=\"-.dlc\"\r\n"+
-            "Content-Type: application/octet-stream\r\n"+
-            "\r\n"+
-            "{0}\r\n"+
+            "Content-Disposition: form-data; name=\"dlcfile\"; filename=\"-.dlc\"\r\n" +
+            "Content-Type: application/octet-stream\r\n" +
+            "\r\n" +
+            "{0}\r\n" +
             "------SomeRandomBoundary--\r\n";
 
         private struct Connection
@@ -64,7 +66,7 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
 
         public struct Result
         {
-            public ResultContent success; 
+            public ResultContent success;
         }
 
         public struct ResultContent
@@ -91,6 +93,7 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
 
         public static Result Upload(byte[] FileContent)
         {
+            LastResult = "";
             var Connections = GetSocket("dcrypt.it");
             if (Connections == null || Connections.Length == 0)
             {
@@ -108,7 +111,8 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
                         NS.Flush();
                         using (var SR = new StreamReader(NS))
                         {
-                            string s= SR.ReadToEnd();
+                            string s = SR.ReadToEnd();
+                            LastResult = s;
                             s = s.Substring(s.IndexOf('{'));
                             s = s.Substring(0, s.LastIndexOf('}') + 1);
                             try
