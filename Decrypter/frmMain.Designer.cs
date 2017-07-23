@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnOpen = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.tbInput = new System.Windows.Forms.TextBox();
@@ -142,6 +143,7 @@
             this.Controls.Add(this.tbInput);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnOpen);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.Text = "DLC Decrypter";
             this.ResumeLayout(false);
