@@ -10,11 +10,6 @@ namespace Decrypter
         [STAThread]
         static void Main(string[] args)
         {
-#if DEBUG
-            args = new string[] {
-                @"C:\Users\Administrator\Desktop\-.dlc"
-            };
-#endif
             if (args.Any(m => m.ToLower() == "--help" || m == "/?" || m == "-?"))
             {
                 ShowHelp();

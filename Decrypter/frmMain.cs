@@ -9,6 +9,12 @@ namespace Decrypter
         public frmMain(string Input = null, string Output = null)
         {
             InitializeComponent();
+            tbInput.Text = Input;
+            tbOutput.Text = Output;
+            if (!string.IsNullOrEmpty(tbInput.Text))
+            {
+                DecryptLinks();
+            }
         }
 
         private void btnOpen_Click(object sender, EventArgs e)
@@ -19,32 +25,34 @@ namespace Decrypter
             }
         }
 
-        private void tbSave_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
             if (SFD.ShowDialog() == DialogResult.OK)
             {
-                tbSave.Text = SFD.FileName;
-                if (!string.IsNullOrEmpty(tbOutput.Text))
+                tbOutput.Text = SFD.FileName;
+                if (!string.IsNullOrEmpty(tbLinks.Text) && MessageBox.Show("Save the existing list?", "Save list", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    if (MessageBox.Show("Save the existing link list now?", "Save existing content", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
-                        SaveList();
-                    }
+                    SaveList();
                 }
             }
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(tbOutput.Text))
+            if (!string.IsNullOrEmpty(tbLinks.Text))
             {
                 Clipboard.Clear();
-                Clipboard.SetText(tbOutput.Text);
+                Clipboard.SetText(tbLinks.Text);
                 MessageBox.Show("Links copied to clipboard", "Clipboard", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void btnDecrypt_Click(object sender, EventArgs e)
+        {
+            DecryptLinks();
+        }
+
+        private void DecryptLinks()
         {
             if (!string.IsNullOrEmpty(tbInput.Text) && File.Exists(tbInput.Text))
             {
@@ -53,7 +61,7 @@ namespace Decrypter
                 {
                     Data = File.ReadAllBytes(tbInput.Text);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ShowError($"Can't read source file. Close other applications that might be using the file.\r\n\r\nMessage from system: {ex.Message}", "Source not readable");
                     return;
@@ -61,7 +69,7 @@ namespace Decrypter
                 var Result = ManualUpload.Upload(Data);
                 if (Result.success.links != null && Result.success.links.Length > 0)
                 {
-                    tbOutput.Lines = (string[])Result.success.links.Clone();
+                    tbLinks.Lines = (string[])Result.success.links.Clone();
                     SaveList();
                 }
                 else
@@ -77,13 +85,13 @@ namespace Decrypter
 
         private void SaveList()
         {
-            if (!string.IsNullOrEmpty(tbOutput.Text))
+            if (!string.IsNullOrEmpty(tbOutput.Text) && !string.IsNullOrEmpty(tbLinks.Text))
             {
-                if (!File.Exists(tbSave.Text) || MessageBox.Show("A file with this name already exists. Owerwrite it?", "Overwrite file", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.OK)
+                if (!File.Exists(tbOutput.Text) || MessageBox.Show("A file with this name already exists. Owerwrite it?", "Overwrite file", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.OK)
                 {
                     try
                     {
-                        File.WriteAllLines(tbSave.Text, tbOutput.Lines);
+                        File.WriteAllLines(tbOutput.Text, tbLinks.Lines);
                     }
                     catch (Exception ex)
                     {

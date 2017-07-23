@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.btnOpen = new System.Windows.Forms.Button();
-            this.tbSave = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.tbInput = new System.Windows.Forms.TextBox();
             this.tbOutput = new System.Windows.Forms.TextBox();
             this.tbLinks = new System.Windows.Forms.TextBox();
@@ -50,16 +50,16 @@
             this.btnOpen.UseVisualStyleBackColor = true;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
-            // tbSave
+            // btnSave
             // 
-            this.tbSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbSave.Location = new System.Drawing.Point(531, 41);
-            this.tbSave.Name = "tbSave";
-            this.tbSave.Size = new System.Drawing.Size(75, 23);
-            this.tbSave.TabIndex = 3;
-            this.tbSave.Text = "&Save...";
-            this.tbSave.UseVisualStyleBackColor = true;
-            this.tbSave.Click += new System.EventHandler(this.tbSave_Click);
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Location = new System.Drawing.Point(531, 41);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 3;
+            this.btnSave.Text = "&Save...";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // tbInput
             // 
@@ -91,8 +91,10 @@
             this.tbLinks.Multiline = true;
             this.tbLinks.Name = "tbLinks";
             this.tbLinks.ReadOnly = true;
+            this.tbLinks.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.tbLinks.Size = new System.Drawing.Size(594, 326);
             this.tbLinks.TabIndex = 4;
+            this.tbLinks.WordWrap = false;
             // 
             // OFD
             // 
@@ -138,7 +140,7 @@
             this.Controls.Add(this.tbLinks);
             this.Controls.Add(this.tbOutput);
             this.Controls.Add(this.tbInput);
-            this.Controls.Add(this.tbSave);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnOpen);
             this.Name = "frmMain";
             this.Text = "DLC Decrypter";
@@ -150,7 +152,7 @@
         #endregion
 
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.Button tbSave;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.TextBox tbInput;
         private System.Windows.Forms.TextBox tbOutput;
         private System.Windows.Forms.TextBox tbLinks;

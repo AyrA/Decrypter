@@ -89,7 +89,7 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
             }
         }
 
-        public static Result Upload(byte[] Data)
+        public static Result Upload(byte[] FileContent)
         {
             var Connections = GetSocket("dcrypt.it");
             if (Connections == null || Connections.Length == 0)
@@ -102,6 +102,7 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
                 {
                     using (var NS = new NetworkStream(C.Client.Client, true))
                     {
+                        byte[] Data = Encoding.UTF8.GetBytes(GetHeader(Encoding.UTF8.GetString(FileContent)));
                         //byte[] Data = Encoding.UTF8.GetBytes(GetHeader(File.ReadAllText(FileName)));
                         NS.Write(Data, 0, Data.Length);
                         NS.Flush();
