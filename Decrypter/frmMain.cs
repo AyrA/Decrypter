@@ -82,7 +82,7 @@ namespace Decrypter
                     ShowError($"The Decryptor returned an error: {Result.message}", "Decryptor API Error");
                 }
                 /* -- Backup Method
-                var Result = ManualUpload.Upload(Data);
+                var Result = await ManualUpload.Upload(Data);
                 if (Result.success.links != null)
                 {
                     if (Result.success.links.Length > 0)

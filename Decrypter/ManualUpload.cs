@@ -4,11 +4,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Decrypter
 {
     public static class ManualUpload
     {
+        #region Fields_Const
+
         public static string LastResult = "";
 
         private const string HEADER = @"POST /decrypt/upload HTTP/1.1
@@ -58,6 +61,12 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
                 return true;
             }
 
+            public async Task<bool> ConnectAsync(int Timeout = 3000)
+            {
+                var WhyTho = this;
+                return await Task.Run(() => { return WhyTho.Connect(Timeout); });
+            }
+
             private void Connect()
             {
                 Client.Connect(RemoteEnd);
@@ -75,6 +84,8 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
             public string[] links;
         }
 
+        #endregion
+
         private static string GetHeader(string BodyContent)
         {
             var Body = string.Format(BODY, BodyContent);
@@ -82,36 +93,36 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
             return $"{Header}\r\n\r\n{Body}";
         }
 
-        public static Result Upload(Stream SourceStream)
+        public static async Task<Result> Upload(Stream SourceStream)
         {
             using (var MS = new MemoryStream())
             {
                 SourceStream.CopyTo(MS);
-                return Upload(MS.ToArray());
+                return await Upload(MS.ToArray());
             }
         }
 
-        public static Result Upload(byte[] FileContent)
+        public static async Task<Result> Upload(byte[] FileContent)
         {
             LastResult = "";
-            var Connections = GetSocket("dcrypt.it");
+            var Connections = await GetSocket("dcrypt.it");
             if (Connections == null || Connections.Length == 0)
             {
                 return default(Result);
             }
             foreach (var C in Connections)
             {
-                if (C.Connect())
+                if (await C.ConnectAsync())
                 {
                     using (var NS = new NetworkStream(C.Client.Client, true))
                     {
                         byte[] Data = Encoding.UTF8.GetBytes(GetHeader(Encoding.UTF8.GetString(FileContent)));
                         //byte[] Data = Encoding.UTF8.GetBytes(GetHeader(File.ReadAllText(FileName)));
-                        NS.Write(Data, 0, Data.Length);
-                        NS.Flush();
+                        await NS.WriteAsync(Data, 0, Data.Length);
+                        await NS.FlushAsync();
                         using (var SR = new StreamReader(NS))
                         {
-                            string s = SR.ReadToEnd();
+                            string s = await SR.ReadToEndAsync();
                             LastResult = s;
                             s = s.Substring(s.IndexOf('{'));
                             s = s.Substring(0, s.LastIndexOf('}') + 1);
@@ -130,12 +141,12 @@ Accept-Language: en-US,en;q=0.8,de;q=0.6";
             return default(Result);
         }
 
-        private static Connection[] GetSocket(string Domain, int Port = 80)
+        private static async Task<Connection[]> GetSocket(string Domain, int Port = 80)
         {
             IPAddress[] Addr = null;
             try
             {
-                Addr = Dns.GetHostAddresses(Domain);
+                Addr = await Dns.GetHostAddressesAsync(Domain);
             }
             catch
             {
