@@ -96,6 +96,7 @@
             this.tbLinks.Size = new System.Drawing.Size(594, 326);
             this.tbLinks.TabIndex = 4;
             this.tbLinks.WordWrap = false;
+            this.tbLinks.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbLinks_KeyDown);
             // 
             // OFD
             // 

@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 
 namespace Decrypter.DecryptModules
 {
-    public class Decrypter
+    public class GenericDecrypter
     {
         public struct WebResponse
         {
@@ -21,6 +22,22 @@ namespace Decrypter.DecryptModules
             RSDF,
             CCF,
             DLC
+        }
+
+        public static Mode ModeFromFileName(string NameOrExtension)
+        {
+            string ext;
+            switch (ext=NameOrExtension.Split('.').Last().ToLower())
+            {
+                case "rsdf":
+                    return Mode.RSDF;
+                case "ccf":
+                    return Mode.CCF;
+                case "dlc":
+                    return Mode.DLC;
+                default:
+                    throw new Exception($"Can't convert {ext} to a supported value");
+            }
         }
 
         public static WebResponse Decrypt(byte[] Content, Mode FileType)

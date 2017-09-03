@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Decrypter.DecryptModules;
+using System;
 using System.IO;
 using System.Windows.Forms;
 
@@ -66,6 +67,17 @@ namespace Decrypter
                     ShowError($"Can't read source file. Close other applications that might be using the file.\r\n\r\nMessage from system: {ex.Message}", "Source not readable");
                     return;
                 }
+                var Result = GenericDecrypter.Decrypt(Data, GenericDecrypter.ModeFromFileName(tbInput.Text));
+                if (Result.success)
+                {
+                    tbLinks.Lines = (string[])Result.data.Clone();
+                    SaveList();
+                }
+                else
+                {
+                    ShowError($"The Decryptor returned an error: {Result.message}", "Decryptor API Error");
+                }
+                /*
                 var Result = ManualUpload.Upload(Data);
                 if (Result.success.links != null)
                 {
@@ -83,6 +95,7 @@ namespace Decrypter
                 {
                     ShowError($"The API returned an empty result. Ensure the source file is really a link container. Message : {Result.success.message}", "API error");
                 }
+                //*/
             }
             else
             {
@@ -111,6 +124,14 @@ namespace Decrypter
         private void ShowError(string Message, string Title)
         {
             MessageBox.Show(Message, Title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void tbLinks_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.A && e.Control && !e.Alt && !e.Shift)
+            {
+                tbLinks.SelectAll();
+            }
         }
     }
 }
