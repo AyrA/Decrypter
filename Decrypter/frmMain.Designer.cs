@@ -38,6 +38,7 @@
             this.SFD = new System.Windows.Forms.SaveFileDialog();
             this.btnDecrypt = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOpen
@@ -132,11 +133,23 @@
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
+            // btnDelete
+            // 
+            this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnDelete.Location = new System.Drawing.Point(12, 401);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(75, 23);
+            this.btnDelete.TabIndex = 7;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(618, 432);
+            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.btnDecrypt);
             this.Controls.Add(this.tbLinks);
@@ -163,5 +176,6 @@
         private System.Windows.Forms.SaveFileDialog SFD;
         private System.Windows.Forms.Button btnDecrypt;
         private System.Windows.Forms.Button btnCopy;
+        private System.Windows.Forms.Button btnDelete;
     }
 }

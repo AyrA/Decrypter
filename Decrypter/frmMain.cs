@@ -1,6 +1,7 @@
 ﻿using Decrypter.DecryptModules;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Decrypter
@@ -14,7 +15,7 @@ namespace Decrypter
             tbOutput.Text = Output;
             if (!string.IsNullOrEmpty(tbInput.Text))
             {
-                DecryptLinks();
+                DecryptLinks().Wait();
             }
         }
 
@@ -48,15 +49,17 @@ namespace Decrypter
             }
         }
 
-        private void btnDecrypt_Click(object sender, EventArgs e)
+        private async void btnDecrypt_Click(object sender, EventArgs e)
         {
-            DecryptLinks();
+            await DecryptLinks();
         }
 
-        private void DecryptLinks()
+        private async Task DecryptLinks()
         {
             if (!string.IsNullOrEmpty(tbInput.Text) && File.Exists(tbInput.Text))
             {
+                Enabled = false;
+                tbLinks.Text = "Decrypting...";
                 byte[] Data = null;
                 try
                 {
@@ -65,9 +68,10 @@ namespace Decrypter
                 catch (Exception ex)
                 {
                     ShowError($"Can't read source file. Close other applications that might be using the file.\r\n\r\nMessage from system: {ex.Message}", "Source not readable");
+                    Enabled = true;
                     return;
                 }
-                var Result = GenericDecrypter.Decrypt(Data, GenericDecrypter.ModeFromFileName(tbInput.Text));
+                var Result = await GenericDecrypter.Decrypt(Data, GenericDecrypter.ModeFromFileName(tbInput.Text));
                 if (Result.success)
                 {
                     tbLinks.Lines = (string[])Result.data.Clone();
@@ -77,7 +81,7 @@ namespace Decrypter
                 {
                     ShowError($"The Decryptor returned an error: {Result.message}", "Decryptor API Error");
                 }
-                /*
+                /* -- Backup Method
                 var Result = ManualUpload.Upload(Data);
                 if (Result.success.links != null)
                 {
@@ -101,6 +105,7 @@ namespace Decrypter
             {
                 ShowError("The source file could not be found", "Source not found");
             }
+            Enabled = true;
         }
 
         private void SaveList()
@@ -131,6 +136,24 @@ namespace Decrypter
             if (e.KeyCode == Keys.A && e.Control && !e.Alt && !e.Shift)
             {
                 tbLinks.SelectAll();
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tbInput.Text))
+            {
+                if (MessageBox.Show("Delete Container File?", "Delete File", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        File.Delete(tbInput.Text);
+                    }
+                    catch(Exception ex)
+                    {
+                        ShowError($"Can't delete file. Reason given: {ex.Message}", "Delete File");
+                    }
+                }
             }
         }
     }

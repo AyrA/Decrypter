@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Decrypter.DecryptModules
 {
@@ -40,17 +41,17 @@ namespace Decrypter.DecryptModules
             }
         }
 
-        public static WebResponse Decrypt(byte[] Content, Mode FileType)
+        public static async Task<WebResponse> Decrypt(byte[] Content, Mode FileType)
         {
             var Req = WebRequest.CreateHttp(ENDPOINT + FileType.ToString().ToLower());
 
             Req.Method = "POST";
 
-            using (var S = Req.GetRequestStream())
+            using (var S = await Req.GetRequestStreamAsync())
             {
                 S.Write(Content, 0, Content.Length);
             }
-            using (var Res = Req.GetResponse())
+            using (var Res = await Req.GetResponseAsync())
             {
                 var Response = "";
                 try
@@ -59,7 +60,7 @@ namespace Decrypter.DecryptModules
                     {
                         using (var SR = new StreamReader(S))
                         {
-                            return JsonConvert.DeserializeObject<WebResponse>(Response = SR.ReadToEnd());
+                            return JsonConvert.DeserializeObject<WebResponse>(Response = await SR.ReadToEndAsync());
                         }
                     }
                 }
