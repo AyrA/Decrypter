@@ -15,7 +15,9 @@ namespace Decrypter
             tbOutput.Text = Output;
             if (!string.IsNullOrEmpty(tbInput.Text))
             {
-                DecryptLinks().Wait();
+                #pragma warning disable CS4014
+                DecryptLinks();
+                #pragma warning restore CS4014
             }
         }
 
