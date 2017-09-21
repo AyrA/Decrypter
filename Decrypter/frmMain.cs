@@ -82,6 +82,9 @@ namespace Decrypter
                 else
                 {
                     ShowError($"The Decryptor returned an error: {Result.message}", "Decryptor API Error");
+#if DEBUG
+                    tbLinks.Text = "DEBUG:\r\n" + string.Join("\r\n", Result.data);
+#endif
                 }
                 /* -- Backup Method
                 var Result = await ManualUpload.Upload(Data);
