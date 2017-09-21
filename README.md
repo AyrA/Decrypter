@@ -44,3 +44,11 @@ If you do so the application will save all decrypted links to the given file, ov
 DLC files (by design) require a webservice to be decrypted.
 This means you can't use them offline.
 This is not a limitation of this application but an intended feature of DLC files.
+
+## Names
+
+This application checks with a hash if the given file has been decrypted already.
+If this is the first time this file will be submitted,
+you are required to enter a name.
+The name should describe the download.
+This feature was added because people that upload files use some sort of absolutely braindead "codex" that describes how to name files.
