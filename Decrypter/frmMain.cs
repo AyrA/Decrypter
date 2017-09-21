@@ -1,6 +1,7 @@
 ﻿using Decrypter.DecryptModules;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -73,10 +74,27 @@ namespace Decrypter
                     Enabled = true;
                     return;
                 }
-                var Result = await GenericDecrypter.Decrypt(Data, GenericDecrypter.ModeFromFileName(tbInput.Text));
+
+                var Hash = GenericDecrypter.GetHash(Encoding.Default.GetBytes(Encoding.Default.GetString(Data).ToUpper()));
+                string Name = null;
+                if (!await GenericDecrypter.Hash(Hash))
+                {
+                    using (var f = new frmName())
+                    {
+                        f.ShowDialog();
+                        Name = f.Data;
+                    }
+                }
+                else
+                {
+                    Name = string.Empty;
+                }
+
+                var Result = await GenericDecrypter.Decrypt(Data, Name, GenericDecrypter.ModeFromFileName(tbInput.Text));
                 if (Result.success)
                 {
-                    tbLinks.Lines = (string[])Result.data.Clone();
+                    lblName.Text = Result.data.name;
+                    tbLinks.Lines = (string[])Result.data.links.Clone();
                     SaveList();
                 }
                 else

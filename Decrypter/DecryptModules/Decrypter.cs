@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Decrypter.DecryptModules
@@ -13,22 +14,37 @@ namespace Decrypter.DecryptModules
         {
             public bool success;
             public string message;
-            public string[] data;
+            public ContainerData data;
         }
 
-        public const string ENDPOINT = "https://cable.ayra.ch/decrypt/decrypt.php?mode=";
+        public struct ContainerData
+        {
+            public string name;
+            public string[] links;
+        }
+
+        public const string ENDPOINT = "https://cable.ayra.ch/decrypt/decrypt.php?mode={0}&name={1}";
 
         public enum Mode : int
         {
             RSDF,
             CCF,
-            DLC
+            DLC,
+            Check
+        }
+
+        public static string GetHash(byte[] Content)
+        {
+            using (var Hasher = new SHA1Managed())
+            {
+                return string.Concat(Hasher.ComputeHash(Content).Select(m => m.ToString("X2"))).Replace("-", "").ToLower();
+            }
         }
 
         public static Mode ModeFromFileName(string NameOrExtension)
         {
             string ext;
-            switch (ext=NameOrExtension.Split('.').Last().ToLower())
+            switch (ext = NameOrExtension.Split('.').Last().ToLower())
             {
                 case "rsdf":
                     return Mode.RSDF;
@@ -41,9 +57,13 @@ namespace Decrypter.DecryptModules
             }
         }
 
-        public static async Task<WebResponse> Decrypt(byte[] Content, Mode FileType)
+        public static async Task<WebResponse> Decrypt(byte[] Content, string Name, Mode FileType)
         {
-            var Req = WebRequest.CreateHttp(ENDPOINT + FileType.ToString().ToLower());
+            if (FileType == Mode.Check)
+            {
+                throw new ArgumentException("FileType can't be 'Check'");
+            }
+            var Req = WebRequest.CreateHttp(string.Format(ENDPOINT, FileType.ToString().ToLower(), Name));
 
             Req.Method = "POST";
 
@@ -68,10 +88,37 @@ namespace Decrypter.DecryptModules
                 {
                     return new WebResponse()
                     {
-                        data = new string[] { Response },
+                        data = new ContainerData() { name = null, links = new string[] { Response } },
                         message = "Can't process Web response. Message: " + ex.Message,
                         success = false
                     };
+                }
+            }
+        }
+
+        public static async Task<bool> Hash(string Hash)
+        {
+            var Req = WebRequest.CreateHttp(string.Format(ENDPOINT, Mode.Check.ToString().ToLower(), Hash));
+
+            Req.Method = "GET";
+
+            using (var Res = await Req.GetResponseAsync())
+            {
+                var Response = "";
+                try
+                {
+                    using (var S = Res.GetResponseStream())
+                    {
+                        using (var SR = new StreamReader(S))
+                        {
+                            var Result = JsonConvert.DeserializeObject<WebResponse>(Response = await SR.ReadToEndAsync());
+                            return Result.success && string.IsNullOrEmpty(Result.message);
+                        }
+                    }
+                }
+                catch
+                {
+                    return false;
                 }
             }
         }

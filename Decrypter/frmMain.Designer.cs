@@ -39,6 +39,7 @@
             this.btnDecrypt = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
+            this.lblName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnOpen
@@ -89,12 +90,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbLinks.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbLinks.Location = new System.Drawing.Point(12, 69);
+            this.tbLinks.Location = new System.Drawing.Point(12, 97);
             this.tbLinks.Multiline = true;
             this.tbLinks.Name = "tbLinks";
             this.tbLinks.ReadOnly = true;
             this.tbLinks.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbLinks.Size = new System.Drawing.Size(594, 326);
+            this.tbLinks.Size = new System.Drawing.Size(594, 298);
             this.tbLinks.TabIndex = 4;
             this.tbLinks.WordWrap = false;
             this.tbLinks.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbLinks_KeyDown);
@@ -144,11 +145,20 @@
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
+            // lblName
+            // 
+            this.lblName.AutoSize = true;
+            this.lblName.Location = new System.Drawing.Point(12, 74);
+            this.lblName.Name = "lblName";
+            this.lblName.Size = new System.Drawing.Size(0, 13);
+            this.lblName.TabIndex = 8;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(618, 432);
+            this.Controls.Add(this.lblName);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.btnDecrypt);
@@ -177,5 +187,6 @@
         private System.Windows.Forms.Button btnDecrypt;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Label lblName;
     }
 }
