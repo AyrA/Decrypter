@@ -100,29 +100,8 @@ namespace Decrypter
                 else
                 {
                     ShowError($"The Decryptor returned an error: {Result.message}", "Decryptor API Error");
-#if DEBUG
-                    tbLinks.Text = "DEBUG:\r\n" + string.Join("\r\n", Result.data);
-#endif
+                    tbLinks.Text = "Raw Response:\r\n" + string.Join("\r\n", Result.data);
                 }
-                /* -- Backup Method
-                var Result = await ManualUpload.Upload(Data);
-                if (Result.success.links != null)
-                {
-                    if (Result.success.links.Length > 0)
-                    {
-                        tbLinks.Lines = (string[])Result.success.links.Clone();
-                        SaveList();
-                    }
-                    else
-                    {
-                        MessageBox.Show("The file contains no links", "Empty link list", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-                else
-                {
-                    ShowError($"The API returned an empty result. Ensure the source file is really a link container. Message : {Result.success.message}", "API error");
-                }
-                //*/
             }
             else
             {
