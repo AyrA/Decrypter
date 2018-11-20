@@ -67,7 +67,6 @@
     <Compile Include="frmName.Designer.cs">
       <DependentUpon>frmName.cs</DependentUpon>
     </Compile>
-    <Compile Include="ManualUpload.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools.cs" />
