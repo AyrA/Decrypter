@@ -127,7 +127,7 @@ namespace Decrypter.DecryptModules
         private static HttpWebRequest GetRequest(string URL)
         {
             var Req = WebRequest.CreateHttp(URL);
-            Req.UserAgent = "AyrA-Decryptor/" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " +https://github.com/AyrA/Decryptor";
+            Req.UserAgent = "AyrA-Decryptor/" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " +https://github.com/AyrA/Decrypter";
             return Req;
         }
     }
