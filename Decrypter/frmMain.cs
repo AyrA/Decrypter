@@ -1,4 +1,5 @@
 ﻿using Decrypter.DecryptModules;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
@@ -100,7 +101,7 @@ namespace Decrypter
                 else
                 {
                     ShowError($"The Decryptor returned an error: {Result.message}", "Decryptor API Error");
-                    tbLinks.Text = "Raw Response:\r\n" + string.Join("\r\n", Result.data);
+                    tbLinks.Text = "Raw Response:\r\n" + JsonConvert.SerializeObject(Result.data);
                 }
             }
             else
