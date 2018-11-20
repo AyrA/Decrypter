@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -63,7 +64,7 @@ namespace Decrypter.DecryptModules
             {
                 throw new ArgumentException("FileType can't be 'Check'");
             }
-            var Req = WebRequest.CreateHttp(string.Format(ENDPOINT, FileType.ToString().ToLower(), Name));
+            var Req = GetRequest(string.Format(ENDPOINT, FileType.ToString().ToLower(), Name));
 
             Req.Method = "POST";
 
@@ -98,7 +99,7 @@ namespace Decrypter.DecryptModules
 
         public static async Task<bool> Hash(string Hash)
         {
-            var Req = WebRequest.CreateHttp(string.Format(ENDPOINT, Mode.Check.ToString().ToLower(), Hash));
+            var Req = GetRequest(string.Format(ENDPOINT, Mode.Check.ToString().ToLower(), Hash));
 
             Req.Method = "GET";
 
@@ -121,6 +122,13 @@ namespace Decrypter.DecryptModules
                     return false;
                 }
             }
+        }
+
+        private static HttpWebRequest GetRequest(string URL)
+        {
+            var Req = WebRequest.CreateHttp(URL);
+            Req.UserAgent = "AyrA-Decryptor/" + Assembly.GetExecutingAssembly().GetName().Version.ToString() + " +https://github.com/AyrA/Decryptor";
+            return Req;
         }
     }
 }
